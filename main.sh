@@ -45,8 +45,7 @@ done
 
 ########################################## DELETE SECTION ##########################################
 function delete_ec2(){
-	echo $TIMEINSECONDS
-TIMEINSECONDS="500"
+#TIMEINSECONDS="500"
 aws ec2 --profile "${PROFILE}" describe-images --owners self --output json |  jq -c '.Images[]' | while read i; do
 createdate=$(echo $i | jq  -M '.CreationDate' | sed s/\"//g)
 imagename=$(echo $i | jq  -M '.Name' | sed s/\"//g)
@@ -152,7 +151,6 @@ if ! [ -x "$(command -v jq)" ]; then
 fi
 shift "$((OPTIND-1))"
 PROFILE="$profile"
-echo $tdate
 if [ -z $tdate ]; then
   TIMEINSECONDS=$((86400 * 7))
 else 
