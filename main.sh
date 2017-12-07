@@ -32,7 +32,7 @@ INSTANCEID=$1
 ecname=$(aws  --profile "${PROFILE}" --output text  ec2 describe-instances  --instance-ids $INSTANCEID --query 'Reservations[].Instances[].[Tags[?Key==`Name`] | [0].Value]')
 
 if [ -n "$ecname" ]; then
-  imageid=$(aws   --profile "${PROFILE}" ec2 --output text create-image --no-reboot  --instance-id $INSTANCEID --name "$ecname-$SHORTDATE 47" --description "$ecname $SHORTDATE 47")
+  imageid=$(aws   --profile "${PROFILE}" ec2 --output text create-image --no-reboot  --instance-id $INSTANCEID --name "$ecname-$SHORTDATE " --description "$ecname $SHORTDATE ")
   IMAGES+=($imageid)
 fi
 }
@@ -144,6 +144,10 @@ while getopts "br:dr:t:rr:lr:p:h" opt; do
 done
 if [ -z $profile ]; then
   e_error  "please select your profile (use \"default\" if you have one profile)"
+  exit 1
+fi
+if ! [ -x "$(command -v jq)" ]; then
+  echo 'Error: jq is not installed.' >&2
   exit 1
 fi
 shift "$((OPTIND-1))"
