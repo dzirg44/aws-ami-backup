@@ -9,14 +9,13 @@ done
 declare -a IMAGES
 
 function show_help() {
-e_header "Usage: ${0##*/} -r  eu-central-1 -b -d -t 14"
+e_header "Usage: ${0##*/} -b -d -t 14"
 e_warning "be careful for use  in production!!!!!!"
 cat << EOF
 	-p         set your profile (if not set  - use "default)
         -b         backup instances
         -d         delete instances (optional)
         -t         time to delete (in day's)
-        -r         set region
         -l         list instances (show always  after delete)
         -h         this help
 EOF
@@ -32,7 +31,7 @@ INSTANCEID=$1
 ecname=$(aws  --profile "${PROFILE}" --output text  ec2 describe-instances  --instance-ids $INSTANCEID --query 'Reservations[].Instances[].[Tags[?Key==`Name`] | [0].Value]')
 
 if [ -n "$ecname" ]; then
-  imageid=$(aws   --profile "${PROFILE}" ec2 --output text create-image --no-reboot  --instance-id $INSTANCEID --name "$ecname-$SHORTDATE " --description "$ecname $SHORTDATE ")
+  imageid=$(aws   --profile "${PROFILE}" ec2 --output text create-image --no-reboot  --instance-id $INSTANCEID --name "$ecname-$SHORTDATE 3" --description "$ecname $SHORTDATE 3")
   IMAGES+=($imageid)
 fi
 }
@@ -76,7 +75,7 @@ return 1
 function list_ec2(){
 alength=${#IMAGES[@]}
 if  [ -n "$delete" ] ;then
-  sleep 120
+  sleep 180
 fi
 cdate="0"
 aws ec2  --profile "${PROFILE}" describe-images --owners self --output json |  jq -c '.Images[]' | while read i; do
@@ -118,15 +117,13 @@ function main(){
 	fi
 
 }
-while getopts "br:dr:t:rr:lr:p:h" opt; do
+while getopts "br:dr:t:lr:p:h" opt; do
         case "$opt" in
                 b)        backup="1"
                         ;;
                 d)        delete="1"
                         ;;
                 t)        tdate=$OPTARG
-                        ;;
-                r)        region=$OPTARG
                         ;;
                 l)        list="1"
                         ;;
