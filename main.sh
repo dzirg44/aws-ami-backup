@@ -31,7 +31,7 @@ INSTANCEID=$1
 ecname=$(aws  --profile "${PROFILE}" --output text  ec2 describe-instances  --instance-ids $INSTANCEID --query 'Reservations[].Instances[].[Tags[?Key==`Name`] | [0].Value]')
 
 if [ -n "$ecname" ]; then
-  imageid=$(aws   --profile "${PROFILE}" ec2 --output text create-image --no-reboot  --instance-id $INSTANCEID --name "$ecname-$SHORTDATE 3" --description "$ecname $SHORTDATE 3")
+  imageid=$(aws   --profile "${PROFILE}" ec2 --output text create-image --no-reboot  --instance-id $INSTANCEID --name "$ecname-$SHORTDATE" --description "$ecname $SHORTDATE")
   IMAGES+=($imageid)
 fi
 }
