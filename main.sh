@@ -68,7 +68,7 @@ image=$1
 for k in "${IMAGES[@]}"; do
       if [ "$image" == "$k" ] ; then
         return 0
-     fi
+      fi
 done
 return 1
 }
@@ -95,7 +95,7 @@ else
         outprint="e_success"
        else 
         outprint="e_warning2"
-     fi
+      fi
 fi
  e_note "=============$imagename=============="
  $outprint "Image_name: $imagename"
